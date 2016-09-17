@@ -2,30 +2,37 @@
 
 #include <bits/stdc++.h>
 using namespace std;
-#define ii pair<int,int>
-#define inf 1e9
+const int inf = 1e9;
+typedef pair<int, int> ii;
 
+// Vector que contiene las distancias desde el nodo
+// en que partimos el BFS hasta el resto de los nodos
 vector<int> d;
+vector<int> visited;
 vector<vector<ii> > adj; // Lista de adyacencia con pesos
-int n;
+int n; // Cantidad de nodos
 
 void dijkstra(int nodo){
   d.assign(n+1,inf);
-  priority_queue<ii> cola;
+  visited.assign(n+1,0);
+  priority_queue<ii, vector<ii>, greater<ii> > cola;
 
   cola.push(ii(0, nodo));
   d[nodo] = 0;
 
   while(!cola.empty()){
     ii u = cola.top(); cola.pop();
-    int nodoActual = u.second;
-    for (int i = 0; i < adj[nodoActual].size(); i++){
-      ii parVecino = adj[nodoActual][i];
-      int nodoVecino = parVecino.second;
-      int pesoVecino = parVecino.first;
-      if (d[nodoActual] + pesoVecino < d[nodoVecino]){
-        d[nodoVecino] = d[nodoActual] + pesoVecino;
-        cola.push(ii(d[nodoVecino],nodoVecino));
+    int Actual = u.second;
+    visited[Actual] = 1;
+    for (int i = 0; i < adj[Actual].size(); i++){
+      ii Vecino = adj[Actual][i];
+      int nodoVecino = Vecino.second;
+      int pesoVecino = Vecino.first;
+      if (!visited[nodoVecino]){
+        if (d[Actual] + pesoVecino < d[nodoVecino]){
+          d[nodoVecino] = d[Actual] + pesoVecino;
+          cola.push(ii(d[nodoVecino],nodoVecino));
+        }
       }
     }
   }
@@ -33,8 +40,8 @@ void dijkstra(int nodo){
 
 
 int main(){
-  ios_base::sync_with_stdio(0);
-  cin.tie(0);
+  //ios_base::sync_with_stdio(0);
+  //cin.tie(0);
   int t;
   cin >> t;
   int asd = 0;
@@ -42,17 +49,23 @@ int main(){
     asd++;
     int m, S, T;
     cin >> n >> m >> S >> T;
-    S++; T++;
+    //scanf("%d %d %d %d",&n,&m,&S,&T);
+    S++; T++; n++;
     adj.assign(n+1, vector<ii>(0));
+    int primer, segundo, peso;
     for (int i = 0; i < m; i++){
-      int primer, segundo, peso;
       cin >> primer >> segundo >> peso;
+      //scanf("%d %d %d", &primer, &segundo, &peso);
       primer++; segundo++;
       adj[primer].push_back(ii(peso,segundo));
       adj[segundo].push_back(ii(peso,primer));
     }
     dijkstra(S);
     if (d[T] == 1e9) cout << "Case #" << asd << ": unreachable" << endl;
-    else cout << "Case #" << asd << ": " << d[T] << endl;
+      //printf("Case #%d: unreachable\n",asd);
+    else
+    cout << "Case #" << asd << ": " << d[T] << endl;
+    //printf("Case #%d: %d\n",asd,d[T]);
   }
+  return 0;
 }
