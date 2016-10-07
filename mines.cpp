@@ -10,20 +10,6 @@ vector<vector<int> > adj;
 
 vector<int> topo;
 
-void bfs(int nodo){
-  queue<int> cola;
-  cola.push(nodo);
-  while(!cola.empty()){
-    int actual = cola.front(); cola.pop();
-    visited[actual] = 1;
-    for (int i = 0; i < adj[actual].size(); i++){
-      if (!visited[adj[actual][i]]){
-        cola.push(adj[actual][i]);
-      }
-    }
-  }
-}
-
 void toposort(int nodo){
   visited[nodo] = 1;
   for (int i = 0; i < adj[nodo].size(); i++){
@@ -49,15 +35,16 @@ int main(){
     int n;
     cin >> n;
     vector<int> diametro(n,0);
-    vector<ii> pos(n);
+    vector<ii> pos;
     adj.assign(n, vector<int>(0));
     visited.assign(n,0);
-    topo.resize(0);
+    topo.clear();
+    
     for (int i = 0; i < n; i++){
       int x, y, diam;
       cin >> x >> y >> diam;
       diametro[i] = diam;
-      pos[i] = ii(x,y);
+      pos.push_back(ii(x,y));
     }
 
 
@@ -81,10 +68,14 @@ int main(){
         toposort(i);
       }
     }
+    
+    reverse(topo.begin(), topo.end());
+
     visited.assign(n,0);
-    for (int i = topo.size()-1; i >= 0; i--){
+    
+    for (int i = 0; i < n; i++){
       if (!visited[topo[i]]){
-        dfs(i);
+        dfs(topo[i]);
         componentesconexas++;
       }
     }
