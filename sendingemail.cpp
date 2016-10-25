@@ -26,8 +26,8 @@ void dijkstra(int nodo){
     visited[Actual] = 1;
     for (int i = 0; i < adj[Actual].size(); i++){
       ii Vecino = adj[Actual][i];
-      int nodoVecino = Vecino.second;
-      int pesoVecino = Vecino.first;
+      int nodoVecino = Vecino.first;
+      int pesoVecino = Vecino.second;
       if (!visited[nodoVecino]){
         if (d[Actual] + pesoVecino < d[nodoVecino]){
           d[nodoVecino] = d[Actual] + pesoVecino;
@@ -57,8 +57,8 @@ int main(){
       cin >> primer >> segundo >> peso;
       //scanf("%d %d %d", &primer, &segundo, &peso);
       primer++; segundo++;
-      adj[primer].push_back(ii(peso,segundo));
-      adj[segundo].push_back(ii(peso,primer));
+      adj[primer].push_back(ii(segundo, peso));
+      adj[segundo].push_back(ii(primer, peso));
     }
     dijkstra(S);
     if (d[T] == 1e9) cout << "Case #" << asd << ": unreachable" << endl;
